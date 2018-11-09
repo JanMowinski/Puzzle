@@ -23,6 +23,7 @@ import static java.lang.Math.abs;
 
 public class GameActivity extends AppCompatActivity {
     ArrayList<PuzzlePiece> pieces;
+    private final float piecesInitialPosition = 300f;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -43,7 +44,7 @@ public class GameActivity extends AppCompatActivity {
                 for(PuzzlePiece piece : pieces) {
                     piece.setOnTouchListener(touchListener);
                     layout.addView(piece);
-                    piece.setElevation(7.0f);
+                    piece.setY(piecesInitialPosition);
                 }
             }
         });
@@ -73,7 +74,7 @@ public class GameActivity extends AppCompatActivity {
         Bitmap scaledBitmap = Bitmap.createScaledBitmap(bitmap, scaledBitmapWidth, scaledBitmapHeight, true);
         Bitmap croppedBitmap = Bitmap.createBitmap(scaledBitmap, abs(scaledBitmapLeft), abs(scaledBitmapTop), croppedImageWidth, croppedImageHeight);
 
-        // Calculate the with and height of the pieces
+        // Calculate the width and height of the pieces
         int pieceWidth = croppedImageWidth/cols;
         int pieceHeight = croppedImageHeight/rows;
 
