@@ -18,6 +18,8 @@ import android.widget.ImageView;
 import android.widget.RelativeLayout;
 
 import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Random;
 
 import static java.lang.Math.abs;
 
@@ -35,19 +37,36 @@ public class GameActivity extends AppCompatActivity {
 
         // run image related code after the view was laid out
         // to have all dimensions calculated
-        imageView.post(new Runnable() {
-            @TargetApi(Build.VERSION_CODES.LOLLIPOP)
-            @Override
-            public void run() {
-                pieces = splitImage();
-                TouchListener touchListener = new TouchListener();
-                for(PuzzlePiece piece : pieces) {
-                    piece.setOnTouchListener(touchListener);
-                    layout.addView(piece);
-                    piece.setY(piecesInitialPosition);
-                }
+
+        pieces = splitImage();
+        TouchListener touchListener = new TouchListener(GameActivity.this);
+        // shuffle pieces order
+        Collections.shuffle(pieces);
+        for(PuzzlePiece piece : pieces) {
+            piece.setOnTouchListener(touchListener);
+            layout.addView(piece);
+            // randomize position, on the bottom of the screen
+            RelativeLayout.LayoutParams lParams = (RelativeLayout.LayoutParams) piece.getLayoutParams();
+            lParams.leftMargin = new Random().nextInt(layout.getWidth() - piece.pieceWidth);
+            lParams.topMargin = layout.getHeight() - piece.pieceHeight;
+            piece.setLayoutParams(lParams);
+        }
+    }
+
+    public void checkGameOver() {
+        if (isGameOver()) {
+            finish();
+        }
+    }
+
+    private boolean isGameOver() {
+        for (PuzzlePiece piece : pieces) {
+            if (piece.canMove) {
+                return false;
             }
-        });
+        }
+
+        return true;
     }
 
     private ArrayList<PuzzlePiece> splitImage() {

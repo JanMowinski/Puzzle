@@ -13,6 +13,12 @@ public class TouchListener implements View.OnTouchListener {
     private float xDelta;
     private float yDelta;
 
+    private GameActivity activity;
+
+    public TouchListener(GameActivity activity) {
+        this.activity = activity;
+    }
+
     @Override
     public boolean onTouch(View view, MotionEvent motionEvent) {
         float x = motionEvent.getRawX();
@@ -45,6 +51,7 @@ public class TouchListener implements View.OnTouchListener {
                     piece.setLayoutParams(lParams);
                     piece.canMove = false;
                     sendViewToBack(piece);
+                    activity.checkGameOver();
                 }
                 break;
         }
